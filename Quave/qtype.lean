@@ -5,8 +5,17 @@ open BigOperators Complex
 
 namespace qtype
 
+/-- Complex conjugation of a number `z` in ℂ. -/
 def conj (z : ℂ) : ℂ := ⟨z.re, -z.im⟩
 
+/-- Inner product for two vectors in a Hilbert space.
+- `dim` is the dimension of the Hilbert space.
+- `v1` and `v2` are functions from `Fin dim → ℂ`.
+- The inner product is the sum of the product of the elements of the two vectors.
+- The product of the elements is multiplied by the complex conjugate of the second vector.
+-/
+def inner_product {dim : Nat} (v1 v2 : Fin dim → ℂ) : ℂ :=
+  ∑ k, v1 k * conj (v2 k)
 
 /-- A struct consist of three fields:
 - `dim` is the dimension of the Hilbert space.
@@ -17,29 +26,45 @@ def conj (z : ℂ) : ℂ := ⟨z.re, -z.im⟩
  -/
 structure HilbertSpace where
   dim : Nat
-  basis : Fin dim → (Fin dim → ℂ)
+  basis : Fin dim → (Fin dim → ℂ)  -- Maps an index to a basis vector
   is_orthonormal : ∀ (i j : Fin dim),
-    (∑ k, basis i k * conj (basis j k)) = if i = j then 1 else 0
+    inner_product (basis i) (basis j) = if i = j then 1 else 0
 
-/-- A general Hilbert space with a given dimension `d`. -/
+/-- A function to create a Hilbert space with canonical basis vectors. -/
 def makeHilbertSpace (d : Nat) : HilbertSpace :=
-  { dim := d,
-    basis := λ i j => if j = i then 1 else 0,  -- Canonical basis vectors
-    is_orthonormal := by sorry }  -- Proof to be completed later
+{ dim := d,
+  basis := fun i j => if j == i then (1 : ℝ) else 0,
+  is_orthonormal := by
+    intro i j
+    by_cases h : i = j
+    case pos =>
+      -- Case: i = j
+      rw [h] -- Replace i with j
+      simp only [inner_product, Finset.sum_ite_eq, Pi.zero_apply, Pi.one_apply]
+      simp [if_pos rfl, conj]
+      exact rfl
+    case neg =>
+      -- Case: i ≠ j
+      simp only [inner_product, Finset.sum_ite_eq, Pi.zero_apply, Pi.one_apply]
+      simp [if_neg h, conj]
+      exact rfl
+}
 
-/-- A simple Hilbert space `Hq` with dimension 2 (e.g., for a qubit). -/
+/-- A simple Hilbert space for a qubit (dimension 2). -/
 def Hq : HilbertSpace := makeHilbertSpace 2
 
-/-- Define a quantum variable structure. -/
+/-- A structure representing a quantum variable. -/
 structure QuantumVar where
   name : String
   type : HilbertSpace
 
-/-- Create a quantum variable `q` of type `Hq`. -/
-def q : QuantumVar := { name := "q", type := Hq }
+/-- Initialize a quantum variable `q` to a specific state. -/
+def init_q (state : Fin Hq.dim → ℂ) : QuantumVar × (Fin Hq.dim → ℂ) :=
+  let q : QuantumVar := { name := "q", type := Hq }
+  (q, state)
 
 /-- Initialize `q` to the state `|0⟩`. -/
-def init_q : QuantumVar × (Fin Hq.dim → ℂ) :=
-  (q, Hq.basis (Fin.mk 0 (show 0 < 2 from Nat.zero_lt_two))) -- Initialize `q` to the first basis vector, `|0⟩`.
+def q_zero : QuantumVar × (Fin Hq.dim → ℂ) :=
+  init_q (Hq.basis (Fin.mk 0 (show 0 < 2 from Nat.zero_lt_two)))
 
 end qtype
