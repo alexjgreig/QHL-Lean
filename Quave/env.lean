@@ -37,7 +37,13 @@ theorem get_set_different (v : Value) (x y : String) {σ : Env} : x ≠ y → (�
 end Env
 
 
+namespace QuantumExpr
 
+def eval(ρ: Env) : QuantumExpr → Option Value
+  | .const i => some i
+  | .var x => ρ.get x -- This needs to be reworked to reflect a quantum expression
+
+end QuantumExpr
 
 
 namespace ClassicalExpr

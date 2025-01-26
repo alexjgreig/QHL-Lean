@@ -15,6 +15,13 @@ inductive ClassicalExpr where
 -- More constructors to be added
 deriving Repr, DecidableEq -- Automatically derive pretty-printing and equality checking
 
+inductive QuantumExpr where
+| const (i: Value)  -- This should be probably be a complex matrix...
+| var (name: String) -- I guess we can use strings for variable names
+-- More constructors to be added
+deriving Repr, DecidableEq -- Automatically derive pretty-printing and equality checking
+
+
 /-- Stmt represents program statements in the qwhile+ language.
     Currently supports:
     - skip (no operation)
