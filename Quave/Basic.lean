@@ -29,7 +29,7 @@ inductive BooleanExpr where
     | True: BooleanExpr
     | False: BooleanExpr
     | eq (e₁ e₂: ClassicalExpr): BooleanExpr
-    | le (e₁ e₂: ClassicalExprExpr): BooleanExpr
+    | le (e₁ e₂: ClassicalExpr): BooleanExpr
     | leq (e₁ e₂: ClassicalExpr): BooleanExpr
     | ge (e₁ e₂: ClassicalExpr): BooleanExpr
     | geq (e₁ e₂: ClassicalExpr): BooleanExpr
