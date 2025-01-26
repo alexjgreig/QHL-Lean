@@ -1,31 +1,57 @@
 namespace qwhilep
 
-/-- Values stored in memory - integers -/
+/-
+Value represents the underlying type
+-/
 abbrev Value := Int
 
-/-- ClassicalExpr represents classical (non-quantum) arithmetic expressions.
-    These expressions are:
-    - Integer constants
+/-
+ClassicalExpr represents classical (non-quantum) arithmetic expressions. These expressions are:
+    - Constants
     - Variables (referenced by name)
-    - Binary arithmetic operations (addition, subtraction, multiplication, division) -/
+    - Binary arithmetic operations (addition, subtraction, multiplication, division)
+-/
 inductive ClassicalExpr where
-| const (i: Value)  -- Don't know if we need to have more types
-| var (name: String) -- I guess we can use strings for variable names
-| add (e₁ e₂: ClassicalExpr) -- Inductive definition
--- More constructors to be added
-deriving Repr, DecidableEq -- Automatically derive pretty-printing and equality checking
+    | const (i: Value): ClassicalExpr
+    | var (name: String): ClassicalExpr
+    | add (e₁ e₂: ClassicalExpr): ClassicalExpr
+    | sub (e₁ e₂: ClassicalExpr): ClassicalExpr
+    | mul (e₁ e₂: ClassicalExpr): ClassicalExpr
+deriving Repr, DecidableEq
 
-/-- Stmt represents program statements in the qwhile+ language.
-    Currently supports:
+/-
+BooleanExpr represents classical (non-quantum) boolean expressions. These expressions are:
+    - Boolean constants (True, False)
+    - Comparison expressions (equalities, inequalities)
+    - Boolean connectives (not, and, or)
+-/
+inductive BooleanExpr where
+    | True: BooleanExpr
+    | False: BooleanExpr
+    | eq (e₁ e₂: ClassicalExpr): BooleanExpr
+    | le (e₁ e₂: ClassicalExprExpr): BooleanExpr
+    | leq (e₁ e₂: ClassicalExpr): BooleanExpr
+    | ge (e₁ e₂: ClassicalExpr): BooleanExpr
+    | geq (e₁ e₂: ClassicalExpr): BooleanExpr
+    | not (e: BooleanExpr): BooleanExpr
+    | and (e₁ e₂: BooleanExpr): BooleanExpr
+    | or (e₁ e₂: BooleanExpr): BooleanExpr
+-- deriving Repr, DecidableEq
+
+/-
+Stmt represents program statements in the qwhile+ language. Currently supports:
     - skip (no operation)
     - assignment
     - sequential composition
-    More constructors will be added for quantum operations -/
+    - if-then-else
+    - while
+-/
 inductive Stmt where
-| skip
-| assign (name: String) (val: ClassicalExpr)
-| seq (stmt₁ stmt₂: Stmt)
--- More constructors to be added
-deriving Repr, DecidableEq
+    | skip: Stmt
+    | assign (name: String) (val: ClassicalExpr): Stmt
+    | seq (s₁ s₂: Stmt): Stmt
+    | if (b: BooleanExpr) (s₁ s₂: Stmt): Stmt
+    | while (b: BooleanExpr) (s: Stmt): Stmt
+-- deriving Repr, DecidableEq
 
 end qwhilep
