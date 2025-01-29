@@ -10,5 +10,6 @@ information and computation.
     (iii) Controlled-Not (CNOT)
     (iv) Phase Gates
     (v) Rotation Gates
+  (c)
 
 -/

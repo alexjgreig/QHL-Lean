@@ -34,6 +34,8 @@ end section
 
 namespace braket
 
+
+
 scoped notation:max "〈" ψ:90 "∣" => (ψ : Bra _)
 
 scoped notation:max "∣" ψ:90 "〉" => (ψ : Ket _)
