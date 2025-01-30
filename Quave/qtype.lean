@@ -1,5 +1,6 @@
 import Mathlib.Data.Complex.Basic
 import Mathlib.Algebra.BigOperators.Fin
+import Lean
 
 open BigOperators Complex
 
@@ -66,5 +67,15 @@ def init_q (state : Fin Hq.dim → ℂ) : QuantumVar × (Fin Hq.dim → ℂ) :=
 /-- Initialize `q` to the state `|0⟩`. -/
 def q_zero : QuantumVar × (Fin Hq.dim → ℂ) :=
   init_q (Hq.basis (Fin.mk 0 (show 0 < 2 from Nat.zero_lt_two)))
+
+
+/-- A quantum register consists of a vector of quantum variables and their associated states. -/
+structure QuantumRegister (n : Nat) where
+  qubits : Vector (QuantumVar × (Fin Hq.dim → ℂ)) n
+
+/-- Creates a quantum register of size `n`, with all qubits initialized to `|0⟩`. -/
+def createQuantumRegisterVec (n : Nat) : QuantumRegister n :=
+  let quantumVars := Vector.ofFn (fun i => (⟨s!"q{i}", Hq⟩, q_zero.snd))
+  QuantumRegister.mk quantumVars
 
 end qtype
