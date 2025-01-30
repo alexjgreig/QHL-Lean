@@ -44,7 +44,6 @@ variable {d: Type*} [Fintype d]
 theorem Hermitian (ρ : PartialDensityOp d) : ρ.m.IsHermitian :=
   ρ.pos.left
 
-
 /-- Get the probability of reaching this state -/
 def prob (ρ : PartialDensityOp d) : ℝ := ρ.m.trace.re
 
