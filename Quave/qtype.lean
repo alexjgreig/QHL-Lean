@@ -1,10 +1,13 @@
 import Mathlib.Data.Complex.Basic
 import Mathlib.Algebra.BigOperators.Fin
 import Lean
+import Quave.partialdensityop
 
 open BigOperators Complex
 
 namespace qtype
+
+noncomputable section
 
 /-- Complex conjugation of a number `z` in ℂ. -/
 def conj (z : ℂ) : ℂ := ⟨z.re, -z.im⟩
@@ -77,5 +80,12 @@ structure QuantumRegister (n : Nat) where
 def createQuantumRegisterVec (n : Nat) : QuantumRegister n :=
   let quantumVars := Vector.ofFn (fun i => (⟨s!"q{i}", Hq⟩, q_zero.snd))
   QuantumRegister.mk quantumVars
+
+variable {d: Type*} [Fintype d]
+
+def partialDensityOpFromQReg {n: Nat} (qreg: QuantumRegister n) : PartialDensityOp d :=
+  by sorry /- Get the values partial density operator from the quantum register by using projection of the pure state-/
+
+end
 
 end qtype

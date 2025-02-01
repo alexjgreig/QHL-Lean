@@ -38,7 +38,8 @@ structure PartialDensityOp (d : Type*) [Fintype d] where
 
 namespace PartialDensityOp
 
-variable {d: Type*} [Fintype d]
+variable {d d₁ d₂: Type*}
+variable [Fintype d] [Fintype d₁] [Fintype d₂]
 
 /-- Every partial density operator is Hermitian (self-adjoint) -/
 theorem Hermitian (ρ : PartialDensityOp d) : ρ.m.IsHermitian :=
@@ -52,5 +53,12 @@ def normalize (ρ : PartialDensityOp d) (h : ρ.prob ≠ 0) : PartialDensityOp d
   m := (1/ρ.prob) • ρ.m
   pos := sorry  -- TODO: Need to prove (1/prob)•ρ is PSD
   tr_le_one := sorry  -- TODO: Need to prove trace becomes 1
+
+def prod (ρ₁ : PartialDensityOp d₁) (ρ₂ : PartialDensityOp d₂) : PartialDensityOp (d₁ × d₂) where
+  m := ρ₁.m ⊗ₖ ρ₂.m
+  pos := by sorry
+  tr_le_one := by sorry
+
+notation ρL "⊗" ρR => prod ρL ρR
 
 end PartialDensityOp
