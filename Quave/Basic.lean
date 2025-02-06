@@ -1,8 +1,8 @@
-namespace qwhilep
-
 import Lean
 
 open Lean Meta Syntax Macro Elab
+
+namespace qwhilep
 
 inductive ArithUnOpt where
   | neg : ArithUnOpt
