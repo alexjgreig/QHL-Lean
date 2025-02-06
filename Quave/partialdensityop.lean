@@ -26,6 +26,10 @@ noncomputable section
 open Classical BigOperators ComplexConjugate Kronecker Matrix
 open scoped Matrix ComplexOrder
 
+
+
+namespace partialdensityop
+
 /-- A partial density operator represents a quantum state with probability tr(ρ) ≤ 1.
     When normalized by tr(ρ), it gives the actual quantum state. -/
 structure PartialDensityOp (d : Type*) [Fintype d] where
@@ -35,8 +39,6 @@ structure PartialDensityOp (d : Type*) [Fintype d] where
   pos : m.PosSemidef
   /-- Proof that the trace is at most 1 (sub-normalization) -/
   tr_le_one : m.trace.re ≤ 1
-
-namespace PartialDensityOp
 
 variable {d d₁ d₂: Type*}
 variable [Fintype d] [Fintype d₁] [Fintype d₂]
@@ -49,8 +51,8 @@ theorem Hermitian (ρ : PartialDensityOp d) : ρ.m.IsHermitian :=
 def prob (ρ : PartialDensityOp d) : ℝ := ρ.m.trace.re
 
 /-- Get the normalized state ρ/tr(ρ) when probability is non-zero -/
-def normalize (ρ : PartialDensityOp d) (h : ρ.prob ≠ 0) : PartialDensityOp d where
-  m := (1/ρ.prob) • ρ.m
+def normalize (ρ : PartialDensityOp d) (h : prob ρ ≠ 0) : PartialDensityOp d where
+  m := (1/(prob ρ)) • ρ.m
   pos := sorry  -- TODO: Need to prove (1/prob)•ρ is PSD
   tr_le_one := sorry  -- TODO: Need to prove trace becomes 1
 
@@ -61,4 +63,4 @@ def prod (ρ₁ : PartialDensityOp d₁) (ρ₂ : PartialDensityOp d₂) : Parti
 
 notation ρL "⊗" ρR => prod ρL ρR
 
-end PartialDensityOp
+end partialdensityop
