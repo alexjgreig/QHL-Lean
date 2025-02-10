@@ -57,9 +57,11 @@ namespace qarray
 
     Fields:
     * `state` - The quantum state vector in the 2^n dimensional Hilbert space
+    * `names` - A vector of variable names that map to each qubit in the array.
     * `is_normalized` - Proof that the state is normalized (sum of probabilities = 1) -/
 structure QArray (n : Nat) where
   state : Fin (2^n) → ℂ  -- The quantum state of n qubits
+  names: Vector (String) n
   is_normalized : ∑ i, (state i * qtype.conj (state i)).re = 1
 
 /-- Creates a new quantum array initialized to the |0...0⟩ state.
@@ -71,6 +73,7 @@ structure QArray (n : Nat) where
     Returns: A new QArray with all qubits in the |0⟩ state -/
 def init (n : Nat) : QArray n :=
 { state := fun i => if i = 0 then 1 else 0,
+  names := Vector.ofFn (fun i => s!"q{i}"),
   is_normalized := by sorry }  -- Proof that state is normalized
 
 /-- Applies a single-qubit gate to a specific qubit in the array.
@@ -92,6 +95,7 @@ def apply_single {n : Nat} (arr : QArray n) (gate : Fin 2 → Fin 2 → ℂ)
       else
         if target_bit = 1 then arr.state i else 0)
     new_state target_bit,
+  names := arr.names,
   is_normalized := by sorry }  -- Proof that resulting state is normalized
 
 /-- Applies a two-qubit gate to specific qubits in the array.
@@ -111,6 +115,7 @@ def apply_two {n : Nat} (arr : QArray n) (gate : Fin 4 → Fin 4 → ℂ)
     let target_bit := (i / (2^target.val)) % 2
     let gate_input := control_bit * 2 + target_bit
     ∑ j, gate gate_input j * arr.state i,
+  names := arr.names,
   is_normalized := by sorry }  -- Proof that resulting state is normalized
 
 /-- Measures a specific qubit in the computational basis.
@@ -135,6 +140,7 @@ def measure {n : Nat} (arr : QArray n) (target : Fin n) (outcome : Fin 2) :
     else 0
   let post_state : QArray n := {
     state := new_state,
+    names := arr.names,
     is_normalized := by sorry  -- Proof that new state is normalized
   }
   (prob, post_state)
@@ -159,6 +165,10 @@ def get_amplitude {n : Nat} (arr : QArray n) (basis_state : Fin (2^n)) : ℂ :=
     Returns: A new QArray initialized to the specified basis state -/
 def from_basis {n : Nat} (basis_state : Fin (2^n)) : QArray n :=
 { state := fun i => if i = basis_state then 1 else 0,
+  names := Vector.ofFn (fun i => s!"q{i}"),
   is_normalized := by sorry }  -- Proof that state is normalized
+
+def init_partialdensop_from_qarray {n: Nat} (arr: QArray n) : partialdensityop.PartialDensityOp (Fin n):=
+  by sorry /- Get the values partial density operator from the quantum register by using projection of the pure state-/
 
 end qarray

@@ -5,7 +5,6 @@ open qwhilep
 /-- A context in which the program evaluates its variables and expressions-/
 def Env := String → Value
 
-
 namespace Env
 
 /-- Set a value in an environment -/

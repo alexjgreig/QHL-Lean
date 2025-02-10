@@ -4,6 +4,25 @@ open Lean Meta Syntax Macro Elab
 
 namespace qwhilep
 
+/-- Values stored in memory - integers -/
+abbrev Value := Int
+/-- ClassicalExpr represents classical (non-quantum) arithmetic expressions.
+ These expressions are:
+ - Integer constants
+ - Variables (referenced by name)
+ - Binary arithmetic operations (addition, subtraction, multiplication, division) -/
+inductive ClassicalExpr where
+| const (i: Value) -- Don't know if we need to have more types
+| var (name: String) -- I guess we can use strings for variable names
+| add (e₁ e₂: ClassicalExpr) -- Inductive definition
+-- More constructors to be added
+deriving Repr, DecidableEq -- Automatically derive pretty-printing and equality checking
+inductive QuantumExpr where
+| const (i: Value) -- This should be probably be a complex matrix...
+| var (name: String) -- I guess we can use strings for variable names
+-- More constructors to be added
+deriving Repr, DecidableEq -- Automatically derive pretty-printing and equality checking
+
 inductive ArithUnOpt where
   | neg : ArithUnOpt
 
