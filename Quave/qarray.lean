@@ -168,7 +168,13 @@ def from_basis {n : Nat} (basis_state : Fin (2^n)) : QArray n :=
   names := Vector.ofFn (fun i => s!"q{i}"),
   is_normalized := by sorry }  -- Proof that state is normalized
 
-def init_partialdensop_from_qarray {n: Nat} (arr: QArray n) : partialdensityop.PartialDensityOp (Fin n):=
-  by sorry /- Get the values partial density operator from the quantum register by using projection of the pure state-/
+
+/- Get the values partial density operator from the quantum register by using projection of the pure state-/
+def pdo_from_qarray {n: Nat} (arr: QArray n) : partialdensityop.PartialDensityOp (Fin n) :=
+  by sorry
+
+def distinctness {n: Nat} {k: Nat} (systems: Vector (QArray n) k) : Bool :=
+∀ (i: Fin k) (j: Fin k), systems[i.val] = systems[j.val] → ∃ (l: Fin n), systems[i.val].names[l.val] ≠ systems[j.val].names[l.val]
+
 
 end qarray

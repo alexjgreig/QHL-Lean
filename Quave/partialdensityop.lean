@@ -63,4 +63,5 @@ def prod (ρ₁ : PartialDensityOp d₁) (ρ₂ : PartialDensityOp d₂) : Parti
 
 notation ρL "⊗" ρR => prod ρL ρR
 
+
 end partialdensityop
